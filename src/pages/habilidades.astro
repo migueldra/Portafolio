@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { skillAreas } from '../data/site';
+---
+
+<BaseLayout title="Habilidades" description="Matriz de habilidades de AM por área: redes, web, sistemas, defensa y SOC, y scripting.">
+  <section class="page container">
+    <h1>Habilidades</h1>
+    <p class="lead">Organizadas por área. Cada punto se respalda con un writeup o proyecto.</p>
+    <p class="todo">
+      TODO: AM, escribe por cada área las herramientas y técnicas que realmente dominas y enlaza el writeup
+      que lo demuestra. No agrego nada por mi cuenta.
+    </p>
+    <ul class="areas">
+      {skillAreas.map((area) => <li><h2>{area}</h2></li>)}
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  .areas {
+    list-style: none;
+    margin: var(--space-4) 0 0;
+    padding: 0;
+    max-width: var(--measure);
+  }
+
+  .areas li {
+    padding-block: var(--space-2);
+    border-top: var(--border);
+  }
+
+  .areas h2 {
+    margin: 0;
+    font-size: var(--text-lg);
+  }
+</style>

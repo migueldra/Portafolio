@@ -1,0 +1,115 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatDate } from '../utils/format';
+
+interface Props {
+  entry: CollectionEntry<'writeups'>;
+}
+
+const { entry } = Astro.props;
+const { title, summary, platform, difficulty, date, tags } = entry.data;
+
+// Difficulty as a 4-pip meter in the "attack" color: the more pips, the harder the way in.
+const levels = { Fácil: 1, Media: 2, Difícil: 3, Insana: 4 } as const;
+const level = levels[difficulty];
+---
+
+<article class="card">
+  <div class="top">
+    <span class="meta">{platform}</span>
+    <span class="level" role="img" aria-label={`Dificultad: ${difficulty}`}>
+      <span class="pips" aria-hidden="true">
+        {[1, 2, 3, 4].map((n) => <i class:list={{ on: n <= level }} />)}
+      </span>
+      <span class="meta" aria-hidden="true">{difficulty}</span>
+    </span>
+  </div>
+  <h3><a href={`/writeups/${entry.id}/`}>{title}</a></h3>
+  <p class="summary">{summary}</p>
+  <p class="meta"><time datetime={date.toISOString()}>{formatDate(date)}</time></p>
+  {
+    tags.length > 0 && (
+      <ul class="tags">
+        {tags.map((tag) => (
+          <li class="tag">{tag}</li>
+        ))}
+      </ul>
+    )
+  }
+</article>
+
+<style>
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-3);
+    background: var(--color-surface);
+    border: var(--border);
+    border-top: 3px solid var(--color-attack);
+    border-radius: var(--radius);
+  }
+
+  .card:hover {
+    background: var(--color-raised);
+  }
+
+  /* Whole card is clickable; the focus ring is drawn on the card itself */
+  .card:has(a:focus-visible) {
+    outline: 3px solid var(--color-defense);
+    outline-offset: 3px;
+  }
+
+  .top {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .level {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .pips {
+    display: inline-flex;
+    gap: 3px;
+  }
+
+  .pips i {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    border: 1.5px solid var(--color-attack);
+  }
+
+  .pips i.on {
+    background: var(--color-attack);
+  }
+
+  h3,
+  p {
+    margin: 0;
+  }
+
+  a {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  a:focus-visible {
+    outline: none;
+  }
+
+  a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .summary {
+    color: var(--color-text-muted);
+  }
+</style>

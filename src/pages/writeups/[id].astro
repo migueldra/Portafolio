@@ -1,0 +1,52 @@
+---
+import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { formatDate } from '../../utils/format';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('writeups', ({ data }) => !data.draft);
+  return entries.map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+}
+
+interface Props {
+  entry: CollectionEntry<'writeups'>;
+}
+
+const { entry } = Astro.props;
+const { title, summary, platform, difficulty, date, tags, tools } = entry.data;
+const { Content } = await render(entry);
+---
+
+<BaseLayout title={title} description={summary}>
+  <article class="page container">
+    <p><a href="/writeups/">← Todos los writeups</a></p>
+    <h1>{title}</h1>
+    <p class="meta">
+      {platform} / {difficulty} / <time datetime={date.toISOString()}>{formatDate(date)}</time>
+    </p>
+    {
+      tags.length > 0 && (
+        <ul class="tags" aria-label="Etiquetas">
+          {tags.map((tag) => (
+            <li class="tag">{tag}</li>
+          ))}
+        </ul>
+      )
+    }
+    {tools.length > 0 && <p class="meta tools">Herramientas: {tools.join(', ')}</p>}
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .tools {
+    margin-top: var(--space-2);
+  }
+
+  .prose {
+    margin-top: var(--space-4);
+  }
+</style>

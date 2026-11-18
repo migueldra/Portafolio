@@ -1,0 +1,59 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { formatDate } from '../utils/format';
+
+const certs = (await getCollection('certificaciones')).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
+---
+
+<BaseLayout title="Certificaciones y formación" description="Certificaciones obtenidas y en curso de AM en ciberseguridad.">
+  <section class="page container">
+    <h1>Certificaciones y formación</h1>
+    {
+      certs.length > 0 ? (
+        <ul class="list">
+          {certs.map(({ data }) => (
+            <li>
+              <h2>{data.name}</h2>
+              <p class="meta">
+                {data.issuer} / {data.status} / <time datetime={data.date.toISOString()}>{formatDate(data.date)}</time>
+              </p>
+              {data.credentialUrl && (
+                <p>
+                  <a href={data.credentialUrl}>Ver credencial</a>
+                </p>
+              )}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="empty">Todavía no hay certificaciones publicadas.</p>
+      )
+    }
+  </section>
+</BaseLayout>
+
+<style>
+  .list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-width: var(--measure);
+  }
+
+  .list li {
+    padding-block: var(--space-2);
+    border-top: var(--border);
+  }
+
+  .list h2 {
+    font-size: var(--text-lg);
+    margin-bottom: 0.25rem;
+  }
+
+  .list p {
+    margin: 0;
+  }
+</style>

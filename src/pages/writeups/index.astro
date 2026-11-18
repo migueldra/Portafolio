@@ -1,0 +1,32 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import WriteupCard from '../../components/WriteupCard.astro';
+
+const writeups = (await getCollection('writeups', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
+---
+
+<BaseLayout
+  title="Writeups"
+  description="Writeups de laboratorios, CTF y máquinas retiradas, cada uno con su parte defensiva."
+>
+  <section class="page container">
+    <h1>Writeups</h1>
+    <p class="lead">
+      Laboratorios y CTF resueltos en entornos autorizados, con cómo se detecta y cómo se mitiga cada hallazgo.
+    </p>
+    {
+      writeups.length > 0 ? (
+        <div class="card-grid">
+          {writeups.map((entry) => (
+            <WriteupCard entry={entry} />
+          ))}
+        </div>
+      ) : (
+        <p class="empty">Todavía no hay writeups publicados.</p>
+      )
+    }
+  </section>
+</BaseLayout>

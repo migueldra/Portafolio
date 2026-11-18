@@ -1,0 +1,193 @@
+---
+// The signature piece: the path of every writeup, from first scan to the fix.
+// Attack steps (warm) lead to a finding; the chain is CUT there and the defensive steps (cool) take over.
+// This mirrors CLAUDE.md rule 6: every writeup includes how it is detected and how it is mitigated.
+const steps = [
+  { side: 'attack', title: 'Enumeración', text: 'Mapear servicios, versiones y superficie expuesta.' },
+  { side: 'attack', title: 'Explotación', text: 'Aprovechar la debilidad en un entorno autorizado.' },
+  { side: 'attack', title: 'Hallazgo', text: 'Documentar qué falló y por qué.' },
+  { side: 'defense', title: 'Detección', text: 'Qué rastro deja y cómo se alerta.' },
+  { side: 'defense', title: 'Mitigación', text: 'Qué cambio cierra la puerta.' },
+] as const;
+
+const CUT_AFTER = 2; // the link after "Hallazgo" is the cut
+---
+
+<figure class="chain">
+  <ol>
+    {
+      steps.map((step, i) => (
+        <li class={`step ${step.side}`} style={`--i:${i}`}>
+          <h3>{step.title}</h3>
+          <p>{step.text}</p>
+          {i === CUT_AFTER && <span class="cut" aria-hidden="true" />}
+        </li>
+      ))
+    }
+  </ol>
+  <figcaption>
+    Cada writeup recorre la cadena completa: del primer escaneo al cambio que la corta.
+  </figcaption>
+</figure>
+
+<style>
+  .chain {
+    margin: 0;
+  }
+
+  ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+  }
+
+  /* ---- Mobile first: vertical chain ------------------------------------- */
+  .step {
+    --accent: var(--color-attack);
+    position: relative;
+    padding: 0 0 var(--space-3) 2.25rem;
+    animation: appear 0.5s ease-out both;
+    animation-delay: calc(var(--i) * 260ms);
+  }
+
+  .step.defense {
+    --accent: var(--color-defense);
+  }
+
+  .step:last-child {
+    padding-bottom: 0;
+  }
+
+  /* The node */
+  .step::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.45rem;
+    width: 0.95rem;
+    height: 0.95rem;
+    border: 3px solid var(--accent);
+    border-radius: 50%;
+    background: var(--color-bg);
+  }
+
+  /* The link to the next node */
+  .step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: calc(0.475rem - 1px);
+    top: 1.6rem;
+    bottom: 0.1rem;
+    width: 2px;
+    background: var(--accent);
+    transform-origin: top;
+    animation: draw 0.4s ease-out both;
+    animation-delay: calc(var(--i) * 260ms + 200ms);
+  }
+
+  /* The cut: the link after "Hallazgo" is broken in the middle and changes side */
+  .step:nth-child(3)::after {
+    background: linear-gradient(
+      to bottom,
+      var(--color-attack) 0 30%,
+      transparent 30% 62%,
+      var(--color-defense) 62% 100%
+    );
+  }
+
+  /* Mark centred in the gap of the broken link (gap spans 30%–62% of the link, so its centre is ~46%) */
+  .cut {
+    position: absolute;
+    left: calc(0.475rem - 0.6rem);
+    top: calc(1.6rem + (100% - 1.7rem) * 0.46);
+    width: 1.2rem;
+    height: 3px;
+    background: var(--color-text);
+    transform: rotate(-30deg);
+    opacity: 0;
+    animation: appear 0.3s ease-out both;
+    animation-delay: calc(var(--i) * 260ms + 700ms);
+  }
+
+  h3 {
+    margin: 0;
+    color: var(--accent);
+  }
+
+  .step p {
+    margin: 0.15rem 0 0;
+    color: var(--color-text-muted);
+    max-width: 34ch;
+  }
+
+  figcaption {
+    margin-top: var(--space-3);
+    max-width: 44rem;
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  /* ---- Wide screens: horizontal chain ----------------------------------- */
+  @media (min-width: 52rem) {
+    ol {
+      grid-template-columns: repeat(5, 1fr);
+      gap: var(--space-2);
+    }
+
+    .step {
+      padding: 2.4rem 0 0;
+    }
+
+    .step:last-child {
+      padding-top: 2.4rem;
+    }
+
+    .step::before {
+      top: 0;
+    }
+
+    .step:not(:last-child)::after {
+      left: 1.2rem;
+      right: calc(var(--space-2) * -1 - 0.2rem);
+      top: calc(0.475rem - 1px);
+      bottom: auto;
+      width: auto;
+      height: 2px;
+      transform-origin: left;
+    }
+
+    .step:nth-child(3)::after {
+      background: linear-gradient(
+        to right,
+        var(--color-attack) 0 30%,
+        transparent 30% 62%,
+        var(--color-defense) 62% 100%
+      );
+    }
+
+    /* The link starts at 1.2rem and is exactly one column wide, so its gap centre is at 1.2rem + 46% */
+    .cut {
+      left: calc(1.2rem + 46% - 0.6rem);
+      top: calc(0.475rem - 1.5px);
+      width: 1.2rem;
+      transform: rotate(-60deg);
+    }
+  }
+
+  @keyframes appear {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes draw {
+    from {
+      transform: scale(0);
+    }
+  }
+</style>

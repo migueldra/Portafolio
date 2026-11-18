@@ -1,0 +1,290 @@
+/* ==========================================================================
+   Global styles — mobile first. Values come from tokens.css.
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.65;
+}
+
+main {
+  flex: 1;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--page-width);
+  margin-inline: auto;
+  padding-inline: var(--space-3);
+}
+
+/* Display type: serif, tight, heavy. This is where the page's voice lives. */
+h1,
+h2,
+h3 {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--text-hero);
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+}
+
+h2 {
+  font-size: var(--text-xl);
+}
+
+h3 {
+  font-size: var(--text-lg);
+  line-height: 1.25;
+}
+
+p {
+  margin: 0 0 var(--space-2);
+}
+
+a {
+  color: var(--color-defense);
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Clear keyboard focus everywhere */
+:focus-visible {
+  outline: 3px solid var(--color-defense);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--space-2);
+  top: -4rem;
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-defense);
+  color: var(--color-defense-contrast);
+  border-radius: var(--radius);
+  z-index: 10;
+}
+
+.skip-link:focus {
+  top: var(--space-1);
+}
+
+/* ---- Reusable pieces ---------------------------------------------------- */
+
+.lead {
+  font-size: var(--text-lg);
+  color: var(--color-text-muted);
+  max-width: 42rem;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.75rem 1.35rem;
+  background: var(--color-defense);
+  color: var(--color-defense-contrast);
+  font-weight: 700;
+  text-decoration: none;
+  border: 1px solid var(--color-defense);
+  border-radius: var(--radius);
+}
+
+.button:hover {
+  filter: brightness(1.1);
+}
+
+.button--ghost {
+  background: transparent;
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+.button--ghost:hover {
+  border-color: var(--color-defense);
+  filter: none;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Monospace is reserved for data labels, tags and code */
+.tag,
+.meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.tag {
+  padding: 0.1rem 0.5rem;
+  border: var(--border);
+  border-radius: 4px;
+}
+
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.section-head h2 {
+  margin: 0;
+}
+
+/* Empty state: a card-shaped slot, so visitors see where content will live */
+.empty {
+  display: grid;
+  gap: var(--space-1);
+  max-width: var(--measure);
+  padding: var(--space-3);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-text-muted);
+}
+
+.empty::before {
+  content: '';
+  width: 40%;
+  height: 0.7rem;
+  border-radius: 999px;
+  background: var(--color-raised);
+}
+
+.empty p {
+  margin: 0;
+}
+
+.card-grid {
+  display: grid;
+  gap: var(--space-2);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+}
+
+.page {
+  padding-block: var(--space-4) var(--space-5);
+}
+
+.page > h1 {
+  font-size: clamp(2.25rem, 6vw, 3.75rem);
+}
+
+/* Visible reminder of data AM still has to provide (CLAUDE.md rule 7) */
+.todo {
+  max-width: 42rem;
+  border-left: 3px solid var(--color-attack);
+  background: var(--color-surface);
+  padding: var(--space-1) var(--space-2);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+}
+
+/* ---- Long-form text (writeups rendered from Markdown) ------------------- */
+
+.prose {
+  max-width: var(--measure);
+}
+
+.prose h2 {
+  margin-top: var(--space-4);
+}
+
+.prose h3 {
+  margin-top: var(--space-3);
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.4rem;
+  margin: 0 0 var(--space-2);
+}
+
+.prose li + li {
+  margin-top: 0.3rem;
+}
+
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--color-surface);
+  border: var(--border);
+  border-radius: 4px;
+  padding: 0.1rem 0.35rem;
+}
+
+.prose pre {
+  overflow-x: auto;
+  padding: var(--space-2);
+  background: var(--color-surface);
+  border: var(--border);
+  border-radius: var(--radius);
+  line-height: 1.5;
+}
+
+.prose pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+.prose blockquote {
+  margin: 0 0 var(--space-2);
+  padding-left: var(--space-2);
+  border-left: 3px solid var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.prose img {
+  max-width: 100%;
+  height: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

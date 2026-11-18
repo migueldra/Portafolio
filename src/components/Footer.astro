@@ -1,0 +1,97 @@
+---
+import { site } from '../data/site';
+
+const year = new Date().getFullYear();
+const { github, linkedin, email } = site.links;
+
+// A link is rendered only when AM has provided the URL; otherwise a visible "pendiente" (rule 7).
+const contacts = [
+  { label: 'GitHub', href: github },
+  { label: 'LinkedIn', href: linkedin },
+  { label: 'Correo', href: email ? `mailto:${email}` : '' },
+];
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <h2>Contacto</h2>
+    <ul class="contacts">
+      {
+        contacts.map((c) => (
+          <li>
+            {c.href ? (
+              <a href={c.href} rel="me noopener">
+                {c.label}
+              </a>
+            ) : (
+              <span>
+                {c.label} <span class="pending">pendiente</span>
+              </span>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+    <div class="legal">
+      <p>© {year} {site.name}. Portafolio de ciberseguridad.</p>
+      <p>
+        Todo el contenido proviene de entornos autorizados: laboratorios propios, CTF y plataformas de
+        práctica.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--space-5);
+    border-top: var(--border);
+    background: var(--color-surface);
+    padding-block: var(--space-4) var(--space-3);
+  }
+
+  h2 {
+    margin-bottom: var(--space-2);
+  }
+
+  .contacts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-4);
+    list-style: none;
+    margin: 0 0 var(--space-4);
+    padding: 0;
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+  }
+
+  .contacts a {
+    color: var(--color-text);
+    text-decoration-color: var(--color-defense);
+    text-decoration-thickness: 2px;
+  }
+
+  .contacts > li > span {
+    color: var(--color-text-muted);
+  }
+
+  .pending {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    padding: 0.1rem 0.5rem;
+    border: 1px dashed var(--color-border);
+    border-radius: 4px;
+    vertical-align: middle;
+  }
+
+  .legal {
+    padding-top: var(--space-2);
+    border-top: var(--border);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .legal p {
+    margin: 0 0 0.25rem;
+  }
+</style>

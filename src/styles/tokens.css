@@ -1,0 +1,66 @@
+/* ==========================================================================
+   Design tokens — the only place where colors, type and spacing are decided.
+
+   Color has MEANING here, not decoration:
+     --color-attack   = the offensive side (enumeration, exploitation, findings, difficulty)
+     --color-defense  = the defensive side (detection, mitigation) and all interactive elements
+   Dark by default; light only when the visitor's system asks for it.
+   Every text/background pair targets WCAG AA (>= 4.5:1).
+   ========================================================================== */
+
+:root {
+  color-scheme: dark light;
+
+  /* Surfaces and text — dark (default) */
+  --color-bg: #0b1018;
+  --color-surface: #121926;
+  --color-raised: #182132;
+  --color-border: #263248;
+  --color-text: #e7ecf5;
+  --color-text-muted: #9aa7bd;
+
+  /* Semantic pair */
+  --color-attack: #ff8a5b;
+  --color-defense: #5ccfe6;
+  --color-defense-contrast: #04141a;
+
+  /* Typography — system stacks only: no downloads, no third parties */
+  --font-display: ui-serif, "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, Cambria, "Times New Roman", serif;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", "SF Mono", Consolas, "Liberation Mono", monospace;
+
+  --text-sm: 0.875rem;
+  --text-base: 1.0625rem;
+  --text-lg: 1.2rem;
+  --text-xl: clamp(1.6rem, 3.5vw, 2.1rem);
+  --text-hero: clamp(2.6rem, 8.5vw, 5.75rem);
+
+  /* Spacing — generous on purpose */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 3rem;
+  --space-5: 5rem;
+  --space-6: 8rem;
+
+  /* Shape and layout */
+  --radius: 6px;
+  --border: 1px solid var(--color-border);
+  --measure: 72ch; /* comfortable reading width */
+  --page-width: 70rem;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --color-bg: #f5f7fb;
+    --color-surface: #ffffff;
+    --color-raised: #eef1f7;
+    --color-border: #d3d9e6;
+    --color-text: #101827;
+    --color-text-muted: #4b5870;
+
+    --color-attack: #b6410f;
+    --color-defense: #00698f;
+    --color-defense-contrast: #ffffff;
+  }
+}

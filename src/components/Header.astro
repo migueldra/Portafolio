@@ -1,0 +1,101 @@
+---
+import { navLinks, site } from '../data/site';
+
+const path = Astro.url.pathname;
+const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+---
+
+<header class="site-header">
+  <div class="container bar">
+    <a class="brand" href="/" aria-label={`${site.name}, ir al inicio`}>
+      <span class="mark" aria-hidden="true"><i></i><i></i></span>
+      {site.name}
+    </a>
+    <nav aria-label="Principal">
+      <ul>
+        {
+          navLinks.map((link) => (
+            <li>
+              <a href={link.href} aria-current={isCurrent(link.href) ? 'page' : undefined}>
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- No JavaScript: on narrow screens the links simply wrap onto a second row. -->
+<style>
+  .site-header {
+    border-bottom: var(--border);
+  }
+
+  .bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-1) var(--space-3);
+    padding-block: var(--space-2);
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.45rem;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  /* Brand mark: two joined nodes, attack and defense (the idea of the whole site) */
+  .mark {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .mark i {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    border: 3px solid var(--color-attack);
+  }
+
+  .mark i + i {
+    margin-left: -0.15rem;
+    border-color: var(--color-defense);
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem var(--space-3);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  nav a {
+    display: inline-block;
+    padding-block: 0.4rem;
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+  }
+
+  nav a:hover {
+    color: var(--color-text);
+  }
+
+  nav a[aria-current='page'] {
+    color: var(--color-text);
+    border-bottom-color: var(--color-defense);
+  }
+</style>

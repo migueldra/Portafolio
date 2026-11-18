@@ -1,0 +1,102 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import WriteupCard from '../components/WriteupCard.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import AttackChain from '../components/AttackChain.astro';
+import { site } from '../data/site';
+
+// Drafts never show up. Newest first; the home page shows the 3 latest writeups and 2 latest projects.
+const byNewest = <T extends { data: { date: Date } }>(a: T, b: T) =>
+  b.data.date.getTime() - a.data.date.getTime();
+
+const writeups = (await getCollection('writeups', ({ data }) => !data.draft)).sort(byNewest).slice(0, 3);
+const projects = (await getCollection('proyectos')).sort(byNewest).slice(0, 2);
+---
+
+<BaseLayout title={site.title} description={site.description}>
+  <section class="hero container">
+    <h1>Rompo laboratorios y documento cómo se defienden.</h1>
+    <p class="lead">
+      Soy {site.name}. Practico seguridad ofensiva en laboratorios y CTF, y cada writeup termina con lo que
+      necesita un equipo defensor: cómo se detecta y cómo se mitiga.
+    </p>
+    <p class="todo">
+      TODO: AM, cambia este texto por tu presentación real (rol que buscas y áreas de interés). No inventaré
+      experiencia ni cargos.
+    </p>
+    <div class="actions">
+      <a class="button" href="/writeups/">Ver Writeups</a>
+      <a class="button button--ghost" href={site.cvPath} download>Descargar CV</a>
+    </div>
+
+    <div class="chain-wrap">
+      <AttackChain />
+    </div>
+  </section>
+
+  <section class="featured container" aria-labelledby="writeups-title">
+    <div class="section-head">
+      <h2 id="writeups-title">Writeups recientes</h2>
+      <a href="/writeups/">Ver todos</a>
+    </div>
+    {
+      writeups.length > 0 ? (
+        <div class="card-grid">
+          {writeups.map((entry) => (
+            <WriteupCard entry={entry} />
+          ))}
+        </div>
+      ) : (
+        <div class="empty">
+          <p>Todavía no hay writeups publicados. El primero aparecerá en este lugar.</p>
+        </div>
+      )
+    }
+  </section>
+
+  <section class="featured container" aria-labelledby="projects-title">
+    <div class="section-head">
+      <h2 id="projects-title">Proyectos recientes</h2>
+      <a href="/proyectos/">Ver todos</a>
+    </div>
+    {
+      projects.length > 0 ? (
+        <div class="card-grid">
+          {projects.map((entry) => (
+            <ProjectCard entry={entry} />
+          ))}
+        </div>
+      ) : (
+        <div class="empty">
+          <p>Todavía no hay proyectos publicados. El primero aparecerá en este lugar.</p>
+        </div>
+      )
+    }
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: var(--space-5) var(--space-4);
+  }
+
+  .hero h1 {
+    max-width: 20ch;
+    margin-bottom: var(--space-3);
+  }
+
+  .hero .lead {
+    margin-bottom: var(--space-3);
+  }
+
+  .chain-wrap {
+    margin-top: var(--space-5);
+    padding-top: var(--space-4);
+    border-top: var(--border);
+  }
+
+  .featured {
+    padding-block: var(--space-4);
+  }
+</style>
